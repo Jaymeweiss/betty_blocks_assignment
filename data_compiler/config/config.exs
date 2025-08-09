@@ -8,7 +8,6 @@
 import Config
 
 config :data_compiler,
-  ecto_repos: [DataCompiler.Repo],
   generators: [timestamp_type: :utc_datetime]
 
 # Configures the endpoint

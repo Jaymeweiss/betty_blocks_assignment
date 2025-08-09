@@ -9,7 +9,6 @@ defmodule DataCompiler.Application do
   def start(_type, _args) do
     children = [
       DataCompilerWeb.Telemetry,
-      DataCompiler.Repo,
       {DNSCluster, query: Application.get_env(:data_compiler, :dns_cluster_query) || :ignore},
       {Phoenix.PubSub, name: DataCompiler.PubSub},
       # Start the Finch HTTP client for sending emails
