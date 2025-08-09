@@ -30,6 +30,10 @@ config :data_compiler, DataCompilerWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :data_compiler, DataCompiler.Mailer, adapter: Swoosh.Adapters.Local
 
+config :cors_plug,
+       origin: [System.get_env("FRONTEND_URL") || "http://localhost:3000"],
+       methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",

@@ -31,6 +31,11 @@ config :data_api, DataApiWeb.Endpoint,
 # at the `config/runtime.exs`.
 config :data_api, DataApi.Mailer, adapter: Swoosh.Adapters.Local
 
+# CORS
+config :cors_plug,
+  origin: [System.get_env("FRONTEND_URL") || "http://localhost:3000"],
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"]
+
 # Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",
