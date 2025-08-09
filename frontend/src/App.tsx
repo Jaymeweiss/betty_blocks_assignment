@@ -1,35 +1,58 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <BrowserRouter>
+      <Routes>
+        <Route path="/app" element={<HomePage />} />
+        <Route path="/compiler" element={<DataCompilerPage />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
-export default App
+function DataCompilerPage() {
+  return (
+    <div>
+      <h1>Data Compiler</h1>
+      <button
+        onClick={() => {
+          const input = document.createElement("input");
+          input.type = "file";
+          input.accept = ".json";
+          input.onchange = (e) => {
+            const file = (e.target as HTMLInputElement).files?.[0];
+            if (file) {
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                try {
+                  const json = JSON.parse(event.target?.result as string);
+                  // Log it out for now as a placeholder
+                  console.log("Uploaded JSON:", json);
+                } catch (error) {
+                  console.error("Invalid JSON file:", error);
+                }
+              };
+              reader.readAsText(file);
+            }
+          };
+          input.click();
+        }}
+      >
+        Upload JSON
+      </button>
+    </div>
+  );
+}
+
+function HomePage() {
+  const style = { padding: "8px" };
+  return (
+    <div style={style}>
+      <h1>Data API</h1>
+    </div>
+  );
+}
+
+export default App;
