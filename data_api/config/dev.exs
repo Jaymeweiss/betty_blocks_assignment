@@ -2,13 +2,18 @@ import Config
 
 # Configure your database
 config :data_api, DataApi.Repo,
-  username: "postgres",
-  password: "postgres",
-  hostname: "localhost",
-  database: "data_api_dev",
+  username: System.get_env("POSTGRES_USER") || "postgres",
+  password: System.get_env("POSTGRES_PASSWORD") || "sekret",
+  hostname: System.get_env("POSTGRES_HOST") || "postgres",
+  database: System.get_env("POSTGRES_DB") || "data_api_dev",
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
+
+# Redis
+config :data_api, :redis,
+  host: "redis",
+  port: 6379
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
