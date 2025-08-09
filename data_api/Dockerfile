@@ -36,4 +36,4 @@ RUN if [ "${MIX_ENV}" != "dev" ]; then \
 
 EXPOSE 8000
 
-CMD ["iex", "-S", "mix", "phx.server"]
+CMD ["mix", "phx.server"]
