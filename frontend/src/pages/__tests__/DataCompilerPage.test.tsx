@@ -1,10 +1,7 @@
-import {describe, it, expect, beforeEach, vi} from "vitest";
+import {describe, it, expect, beforeEach, afterEach, vi} from "vitest";
 import DataCompilerPage from "../DataCompilerPage.tsx";
 import {render, screen} from "@testing-library/react";
 import {userEvent} from "@testing-library/user-event";
-
-// Mock fetch
-global.fetch = vi.fn();
 
 const mockTableSchema = {
     name: "test_table",
@@ -30,7 +27,12 @@ const createMockFile = (schema) => {
 
 describe("DataCompilerPage", () => {
     beforeEach(() => {
+        vi.stubGlobal("fetch", vi.fn());
         vi.resetAllMocks();
+    });
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
     });
 
     it("should render the compiler page with the correct visual elements", () => {

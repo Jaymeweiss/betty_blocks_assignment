@@ -1,12 +1,14 @@
-import {describe, it, expect, vi, beforeEach} from "vitest";
+import {describe, it, expect, vi, beforeEach, afterEach} from "vitest";
 import {dataCompilerApi, type TableSchema} from "../dataCompilerApi";
-
-// Mock fetch
-global.fetch = vi.fn();
 
 describe("DataCompilerApiService", () => {
     beforeEach(() => {
+        vi.stubGlobal("fetch", vi.fn());
         vi.resetAllMocks();
+    });
+
+    afterEach(() => {
+        vi.unstubAllGlobals();
     });
 
     describe("compileJson", () => {
