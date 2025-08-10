@@ -23,6 +23,7 @@ const createMockResponse = (
     });
 };
 
+// @ts-expect-error - the schema could be malformed, and we want to test this
 const createMockFile = (schema) => {
     return new File([JSON.stringify(schema)], "test.json", {
         type: "application/json",
