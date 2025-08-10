@@ -1,4 +1,4 @@
-function HomePage() {
+function DataApiPage() {
     const style = { padding: "8px" };
     return (
         <div style={style}>
@@ -7,4 +7,4 @@ function HomePage() {
     );
 }
 
-export default HomePage;
+export default DataApiPage;

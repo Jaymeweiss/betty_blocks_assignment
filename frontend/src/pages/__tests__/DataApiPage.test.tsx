@@ -1,11 +1,11 @@
 import {describe, it, expect} from "vitest";
-import HomePage from "../HomePage";
+import DataApiPage from "../DataApiPage";
 import {render, screen} from "@testing-library/react";
 
 
-describe("HomePage", () => {
+describe("DataApiPage", () => {
     it("should only the DataAPI text by default", () => {
-        render(<HomePage/>);
+        render(<DataApiPage/>);
         expect(screen.getByText("Data API")).toBeInTheDocument();
     });
 })
