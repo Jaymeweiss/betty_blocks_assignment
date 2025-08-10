@@ -77,11 +77,11 @@ describe("DataCompilerPage", () => {
 
         const file = createMockFile(mockTableSchema);
 
-        const fileInput = screen.getByTestId("file-input");
+        const fileInput = screen.getByTestId("file-input") as HTMLInputElement;
 
         await user.upload(fileInput, file);
 
-        expect(fileInput.files[0]).toBe(file);
+        expect(fileInput.files![0]).toBe(file);
         expect(fileInput.files).toHaveLength(1);
     });
 
