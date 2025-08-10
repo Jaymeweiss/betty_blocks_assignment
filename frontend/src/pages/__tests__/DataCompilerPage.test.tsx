@@ -12,18 +12,22 @@ const mockTableSchema = {
     description: "Test table",
 };
 
-const createMockResponse = (status_code: number, status: string, message?: string) => {
-    return new Response(
-        JSON.stringify({status, message}),
-        {status: status_code, headers: {"Content-Type": "application/json"}}
-    );
+const createMockResponse = (
+    status_code: number,
+    status: string,
+    message?: string,
+) => {
+    return new Response(JSON.stringify({status, message}), {
+        status: status_code,
+        headers: {"Content-Type": "application/json"},
+    });
 };
 
 const createMockFile = (schema) => {
     return new File([JSON.stringify(schema)], "test.json", {
         type: "application/json",
     });
-}
+};
 
 describe("DataCompilerPage", () => {
     beforeEach(() => {
@@ -67,11 +71,8 @@ describe("DataCompilerPage", () => {
 
         render(<DataCompilerPage/>);
         vi.mocked(fetch).mockResolvedValueOnce(
-            createMockResponse(
-                200,
-                "success",
-                "Compiled successfully"
-            ));
+            createMockResponse(200, "success", "Compiled successfully"),
+        );
 
         const file = createMockFile(mockTableSchema);
 
@@ -89,11 +90,8 @@ describe("DataCompilerPage", () => {
         render(<DataCompilerPage/>);
 
         vi.mocked(fetch).mockResolvedValueOnce(
-            createMockResponse(
-                200,
-                "success",
-                "Compiled successfully"
-            ));
+            createMockResponse(200, "success", "Compiled successfully"),
+        );
 
         const file = createMockFile(mockTableSchema);
 
@@ -118,11 +116,8 @@ describe("DataCompilerPage", () => {
         render(<DataCompilerPage/>);
 
         vi.mocked(fetch).mockResolvedValueOnce(
-            createMockResponse(
-                400,
-                "error",
-                "Invalid JSON data provided"
-            ));
+            createMockResponse(400, "error", "Invalid JSON data provided"),
+        );
 
         const file = createMockFile(mockTableSchema);
 
@@ -138,18 +133,14 @@ describe("DataCompilerPage", () => {
             color: "#721c24",
             border: "1px solid #f5c6cb",
         });
-    })
+    });
 
     it("should display the correct message when upon error response from the DataCompiler API when no message is present in the response", async () => {
         const user = userEvent.setup();
 
         render(<DataCompilerPage/>);
 
-        vi.mocked(fetch).mockResolvedValueOnce(
-            createMockResponse(
-                400,
-                "error",
-            ));
+        vi.mocked(fetch).mockResolvedValueOnce(createMockResponse(400, "error"));
 
         const file = createMockFile(mockTableSchema);
 
@@ -157,8 +148,16 @@ describe("DataCompilerPage", () => {
 
         await user.upload(fileInput, file);
 
-        expect(screen.getByText("Failed to connect to compile the JSON file. Please try again.")).toBeInTheDocument();
-        expect(screen.getByText("Failed to connect to compile the JSON file. Please try again.")).toHaveStyle({
+        expect(
+            screen.getByText(
+                "Failed to connect to compile the JSON file. Please try again.",
+            ),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                "Failed to connect to compile the JSON file. Please try again.",
+            ),
+        ).toHaveStyle({
             padding: "10px",
             margin: "10px 0",
             borderRadius: "4px",
@@ -166,7 +165,7 @@ describe("DataCompilerPage", () => {
             color: "#721c24",
             border: "1px solid #f5c6cb",
         });
-    })
+    });
 
     it("should display the correct message when there is a failure when calling the DataCompiler API", async () => {
         const user = userEvent.setup();
@@ -181,16 +180,24 @@ describe("DataCompilerPage", () => {
 
         await user.upload(fileInput, file);
 
-        expect(screen.getByText("Failed to connect to the compiler service. Please try again.")).toBeInTheDocument();
-        expect(screen.getByText("Failed to connect to the compiler service. Please try again.")).toHaveStyle({
+        expect(
+            screen.getByText(
+                "Failed to connect to the compiler service. Please try again.",
+            ),
+        ).toBeInTheDocument();
+        expect(
+            screen.getByText(
+                "Failed to connect to the compiler service. Please try again.",
+            ),
+        ).toHaveStyle({
             padding: "10px",
             margin: "10px 0",
             borderRadius: "4px",
             backgroundColor: "#f8d7da",
             color: "#721c24",
             border: "1px solid #f5c6cb",
-        })
-    })
+        });
+    });
 
     it("should display the correct error message when there an error parsing the JSON", async () => {
         const user = userEvent.setup();
@@ -198,13 +205,12 @@ describe("DataCompilerPage", () => {
         render(<DataCompilerPage/>);
 
         vi.mocked(fetch).mockResolvedValueOnce(
-            createMockResponse(
-                200,
-                "success",
-                "Compiled successfully"
-            ));
+            createMockResponse(200, "success", "Compiled successfully"),
+        );
 
-        const invalidFile = new File(["{ invalid json syntax"], "invalid.json", {type: "application/json"});
+        const invalidFile = new File(["{ invalid json syntax"], "invalid.json", {
+            type: "application/json",
+        });
 
         const fileInput = screen.getByTestId("file-input");
         await user.upload(fileInput, invalidFile);
@@ -217,6 +223,6 @@ describe("DataCompilerPage", () => {
             backgroundColor: "#f8d7da",
             color: "#721c24",
             border: "1px solid #f5c6cb",
-        })
-    })
+        });
+    });
 });
