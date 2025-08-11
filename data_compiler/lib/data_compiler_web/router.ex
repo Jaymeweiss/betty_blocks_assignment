@@ -15,6 +15,12 @@ defmodule DataCompilerWeb.Router do
   end
 
   scope "/", DataCompilerWeb do
+    pipe_through :api
+
+    post "/compile", CompilerController, :compile_json
+  end
+
+  scope "/", DataCompilerWeb do
     pipe_through :browser
 
     get "/", PageController, :home
