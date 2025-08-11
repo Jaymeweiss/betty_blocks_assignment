@@ -1,0 +1,7 @@
+{
+  "name": "test_table",
+  "columns": [
+    {"name": "id", "type": "int"},
+    {"name": "name", "type": "string"}
+  ]
+}
