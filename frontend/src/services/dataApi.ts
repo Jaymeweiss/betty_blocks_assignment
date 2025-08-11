@@ -16,7 +16,7 @@ class DataApiService {
         this.baseUrl = API_CONFIG.DATA_API_BASE_URL;
     }
 
-    async getDatabaseTableList(): Promise<Response> {
+    async getDatabaseTableList(): Promise<Response | Error> {
         return await fetch(`${this.baseUrl}/databases`, {
             method: 'GET',
             headers: {
@@ -25,7 +25,7 @@ class DataApiService {
         })
     }
 
-    async getData(databaseTable: string): Promise<Response> {
+    async getData(databaseTable: string): Promise<Response | Error> {
         return await fetch(`${this.baseUrl}/data/${databaseTable}`, {
             method: 'GET',
             headers: {

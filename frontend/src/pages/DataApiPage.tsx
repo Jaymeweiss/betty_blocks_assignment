@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {dataApi, type DatabaseTableDataResponse, type DatabaseTableListResponse} from "../services/dataApi.tsx";
+import {dataApi, type DatabaseTableDataResponse, type DatabaseTableListResponse} from "../services/dataApi.ts";
 
 function DataApiPage() {
     const [isRetrievingDatabaseTableList, setIsRetrievingDatabaseTableList] = useState(false);
@@ -19,10 +19,14 @@ function DataApiPage() {
         setRows([]);
 
         try {
-            const response = await dataApi.getDatabaseTableList();
-            const result: DatabaseTableListResponse = await response.json();
-            if (response.ok && response.status === 200) {
-                setDatabaseList(result.database_tables);
+            const response: Response | Error = await dataApi.getDatabaseTableList();
+            if (response instanceof Response) {
+                const result: DatabaseTableListResponse = await response.json();
+                if (response.ok && response.status === 200) {
+                    setDatabaseList(result.database_tables);
+                } else {
+                    setErrorMessage("Failed to retrieve database table list");
+                }
             } else {
                 setErrorMessage("Failed to retrieve database table list");
             }
@@ -41,11 +45,15 @@ function DataApiPage() {
         setRows([]);
 
         try {
-            const response = await dataApi.getData(database);
-            const result: DatabaseTableDataResponse = await response.json();
-            if (response.ok && response.status === 200) {
-                setColumns(result.columns);
-                setRows(result.rows);
+            const response: Response | Error = await dataApi.getData(database);
+            if (response instanceof Response) {
+                const result: DatabaseTableDataResponse = await response.json();
+                if (response.ok && response.status === 200) {
+                    setColumns(result.columns);
+                    setRows(result.rows);
+                } else {
+                    setErrorMessage("Failed to retrieve data");
+                }
             } else {
                 setErrorMessage("Failed to retrieve data");
             }
@@ -56,6 +64,9 @@ function DataApiPage() {
         }
     };
 
+    const shouldDisplayData = selectedDatabaseTable && columns.length > 0 && rows.length > 0;
+
+
     useEffect(() => {
         handleRetrieveDatabaseTableList();
     }, []);
@@ -63,47 +74,66 @@ function DataApiPage() {
     return (
         <div>
             <h1>Data API</h1>
-            {errorMessage && <div className="error-message">{errorMessage}</div>}
-            <div>
-                {isRetrievingDatabaseTableList && (
-                    <p>Retrieving database table list...</p>
-                )}
-                <div className={databaseList ? "database-list" : "database-list hidden"}>
-                    <h2>Databases:</h2>
-                    <div className="chip-container">
-                        {databaseList.map((database, index) => (
-                            <div
-                                key={index}
-                                className="chip"
-                                onClick={() => handleRetrieveData(database)}
-                            >
-                                {database}
-                            </div>
-                        ))}
-                    </div>
-                </div>
-                {isRetrievingData && <p>Retrieving data...</p>}
-                <div className={columns ? "table-container" : "table-container hidden"}>
-                    <table>
-                        <thead>
-                        <tr>
-                            {columns.map((column, index) => (
-                                <th key={index}>{column}</th>
-                            ))}
-                        </tr>
-                        </thead>
-                        <tbody>
-                        {rows.map((row, rowIndex) => (
-                            <tr key={`${selectedDatabaseTable}-${rowIndex}`}>
-                                {row.map((cell, cellIndex) => (
-                                    <td key={`${rowIndex}-${cellIndex}`}>{cell}</td>
+            {errorMessage && <div className="error-message" data-testid="error-banner">{`Error: ${errorMessage}`}</div>}
+            {
+                isRetrievingDatabaseTableList
+                    ? <p>Retrieving database table list...</p>
+                    : databaseList.length > 0
+                        ? <div className="database-table-list" data-testid="database-table-list">
+                            <h2>Database tables:</h2>
+                            <div className="chip-container">
+                                {databaseList.map((database, index) => (
+                                    <div
+                                        key={`${selectedDatabaseTable}-${index}`}
+                                        className={selectedDatabaseTable === database ? "selected_chip" : "chip"}
+                                        onClick={() => handleRetrieveData(database)}
+                                    >
+                                        {database}
+                                    </div>
                                 ))}
-                            </tr>
-                        ))}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+                            </div>
+                        </div>
+                        : <div className="info-message">No database tables available</div>
+            }
+            {
+                isRetrievingData
+                    ? <p>Retrieving data...</p>
+                    : (shouldDisplayData)
+                        ? <div className="table-container" data-testid="data-table">
+                            <table>
+                                <thead>
+                                <tr>
+                                    {columns.map((column, index) => (
+                                        <th
+                                            key={`${selectedDatabaseTable}-column-${index}`}
+                                            data-testid={`${selectedDatabaseTable}-column-${index}`}
+                                        >
+                                            {column}
+                                        </th>
+                                    ))}
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {rows.map((row, rowIndex) => (
+                                    <tr
+                                        key={`${selectedDatabaseTable}-row-${rowIndex}`}
+                                        data-testid={`${selectedDatabaseTable}-row-${rowIndex}`}
+                                    >
+                                        {row.map((cell, cellIndex) => (
+                                            <td
+                                                key={`row-${rowIndex}-cell-${cellIndex}`}
+                                                data-testid={`row-${rowIndex}-cell-${cellIndex}`}
+                                            >
+                                                {cell}
+                                            </td>
+                                        ))}
+                                    </tr>
+                                ))}
+                                </tbody>
+                            </table>
+                        </div>
+                        : <div className="info-message">No data available</div>
+            }
         </div>
     );
 }

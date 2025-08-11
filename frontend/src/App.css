@@ -25,6 +25,15 @@
     border: 1px solid #f5c6cb;
 }
 
+.info-message {
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 4px;
+    background-color: #d7ebf8;
+    color: #1e5d8c;
+    border: 1px solid #c6d9f5;
+}
+
 .chip {
     display: inline-block;
     padding: 0.5em 1em;
