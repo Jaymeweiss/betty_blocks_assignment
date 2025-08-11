@@ -195,12 +195,12 @@ describe("DataCompilerPage", () => {
 
         expect(
             screen.getByText(
-                "Failed to connect to the compiler service. Please try again.",
+                "Failed to connect to compile the JSON file. Please try again.",
             ),
         ).toBeInTheDocument();
         expect(
             screen.getByText(
-                "Failed to connect to the compiler service. Please try again.",
+                "Failed to connect to compile the JSON file. Please try again.",
             ),
         ).toHaveStyle({
             padding: "10px",

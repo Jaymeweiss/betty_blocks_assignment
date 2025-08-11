@@ -3,7 +3,7 @@ import {
     type CompilerResponse,
     dataCompilerApi,
     type TableSchema,
-} from "../services/dataCompilerApi.tsx";
+} from "../services/dataCompilerApi.ts";
 import * as React from "react";
 
 function DataCompilerPage() {
@@ -88,17 +88,22 @@ const handleCompileJson = async (
     setMessage("");
 
     try {
-        const response = await dataCompilerApi.compileJson(jsonData);
-        const result: CompilerResponse = await response.json();
+        const response : Response | Error = await dataCompilerApi.compileJson(jsonData);
+        if (response instanceof Response) {
+            const result: CompilerResponse = await response.json();
 
-        if (response.ok && response.status === 200) {
-            setMessage("JSON compiled successfully");
-            setMessageType(result.status);
+            if (response.ok && response.status === 200) {
+                setMessage("JSON compiled successfully");
+                setMessageType(result.status);
+            } else {
+                setMessage(
+                    result.message || "Failed to connect to compile the JSON file. Please try again.",
+                );
+                setMessageType(result.status);
+            }
         } else {
-            setMessage(
-                result.message || "Failed to connect to compile the JSON file. Please try again.",
-            );
-            setMessageType(result.status);
+            setMessage("Failed to connect to compile the JSON file. Please try again.",);
+            setMessageType("error");
         }
     } catch (_error) {
         setMessage("Failed to connect to the compiler service. Please try again.");

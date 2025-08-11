@@ -23,7 +23,7 @@ class DataCompilerApiService {
         this.baseUrl = API_CONFIG.DATA_COMPILER_BASE_URL;
     }
 
-    async compileJson(jsonData: TableSchema): Promise<Response> {
+    async compileJson(jsonData: TableSchema): Promise<Response | Error> {
         return await fetch(`${this.baseUrl}/compile`, {
             method: 'POST',
             headers: {
