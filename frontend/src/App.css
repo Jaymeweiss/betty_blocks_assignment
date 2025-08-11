@@ -16,11 +16,11 @@
   filter: drop-shadow(0 0 2em #61dafbaa);
 }
 
-.error_message {
+.error-message {
     padding: 10px;
     margin: 10px 0;
-    borderRadius: 4px;
-    backgroundColor: #f8d7da;
+    border-radius: 4px;
+    background-color: #f8d7da;
     color: #721c24;
     border: 1px solid #f5c6cb;
 }
@@ -32,4 +32,13 @@
     border-radius: 2em;
     background-color: #f0f0f0;
     color: #333;
+}
+
+.selected-chip {
+    display: inline-block;
+    padding: 0.5em 1em;
+    margin: 0.5em;
+    border-radius: 2em;
+    background-color: #c3c6fa;
+    color: #313797;
 }
