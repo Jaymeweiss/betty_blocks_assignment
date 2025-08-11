@@ -14,6 +14,8 @@ services:
       - ".env"
     volumes:
       - ./data_api:/app
+      - data_api_deps:/app/deps
+      - data_api_build:/app/_build
     depends_on:
       - postgres
       - redis
@@ -33,6 +35,8 @@ services:
       - ".env"
     volumes:
       - ./data_compiler:/app
+      - data_compiler_deps:/app/deps
+      - data_compiler_build:/app/_build
     depends_on:
       - redis
 
@@ -69,3 +73,7 @@ services:
 volumes:
   postgres_data:
   redis_data:
+  data_api_deps:
+  data_api_build:
+  data_compiler_deps:
+  data_compiler_build:
