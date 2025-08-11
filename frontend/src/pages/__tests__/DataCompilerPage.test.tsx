@@ -1,7 +1,8 @@
-import {describe, it, expect, beforeEach, afterEach, vi} from "vitest";
+import {describe, it, expect, vi} from "vitest";
 import DataCompilerPage from "../DataCompilerPage.tsx";
 import {render, screen} from "@testing-library/react";
 import {userEvent} from "@testing-library/user-event";
+import {dataCompilerApi} from "../../services/dataCompilerApi.ts";
 
 const mockTableSchema = {
     name: "test_table",
@@ -12,7 +13,7 @@ const mockTableSchema = {
     description: "Test table",
 };
 
-const createMockResponse = (
+const createMockCompileJsonResponse = async (
     status_code: number,
     status: string,
     message?: string,
@@ -23,6 +24,10 @@ const createMockResponse = (
     });
 };
 
+const createErrorResponse = async () => {
+    return new Error("Network error")
+}
+
 // @ts-expect-error - the schema could be malformed, and we want to test this
 const createMockFile = (schema) => {
     return new File([JSON.stringify(schema)], "test.json", {
@@ -30,16 +35,9 @@ const createMockFile = (schema) => {
     });
 };
 
+vi.mock("../../services/dataCompilerApi.ts")
+
 describe("DataCompilerPage", () => {
-    beforeEach(() => {
-        vi.stubGlobal("fetch", vi.fn());
-        vi.resetAllMocks();
-    });
-
-    afterEach(() => {
-        vi.unstubAllGlobals();
-    });
-
     it("should render the compiler page with the correct visual elements", () => {
         render(<DataCompilerPage/>);
         expect(screen.getByRole("heading", {level: 1})).toHaveTextContent(
@@ -59,6 +57,11 @@ describe("DataCompilerPage", () => {
         const fileInput = screen.getByTestId("file-input");
 
         const clickSpy = vi.spyOn(fileInput, "click");
+        vi.mocked(dataCompilerApi.compileJson).mockReturnValue(createMockCompileJsonResponse(
+            200,
+            "success",
+            "Compiled successfully"
+        ))
 
         await user.click(uploadButton);
 
@@ -71,9 +74,11 @@ describe("DataCompilerPage", () => {
         const user = userEvent.setup();
 
         render(<DataCompilerPage/>);
-        vi.mocked(fetch).mockResolvedValueOnce(
-            createMockResponse(200, "success", "Compiled successfully"),
-        );
+        vi.mocked(dataCompilerApi.compileJson).mockReturnValue(createMockCompileJsonResponse(
+            200,
+            "success",
+            "Compiled successfully"
+        ))
 
         const file = createMockFile(mockTableSchema);
 
@@ -90,9 +95,11 @@ describe("DataCompilerPage", () => {
 
         render(<DataCompilerPage/>);
 
-        vi.mocked(fetch).mockResolvedValueOnce(
-            createMockResponse(200, "success", "Compiled successfully"),
-        );
+        vi.mocked(dataCompilerApi.compileJson).mockReturnValue(createMockCompileJsonResponse(
+            200,
+            "success",
+            "Compiled successfully"
+        ))
 
         const file = createMockFile(mockTableSchema);
 
@@ -116,9 +123,11 @@ describe("DataCompilerPage", () => {
 
         render(<DataCompilerPage/>);
 
-        vi.mocked(fetch).mockResolvedValueOnce(
-            createMockResponse(400, "error", "Invalid JSON data provided"),
-        );
+        vi.mocked(dataCompilerApi.compileJson).mockReturnValue(createMockCompileJsonResponse(
+            400,
+            "error",
+            "Invalid JSON data provided"
+        ))
 
         const file = createMockFile(mockTableSchema);
 
@@ -141,7 +150,10 @@ describe("DataCompilerPage", () => {
 
         render(<DataCompilerPage/>);
 
-        vi.mocked(fetch).mockResolvedValueOnce(createMockResponse(400, "error"));
+        vi.mocked(dataCompilerApi.compileJson).mockReturnValue(createMockCompileJsonResponse(
+            400,
+            "error"
+        ))
 
         const file = createMockFile(mockTableSchema);
 
@@ -173,7 +185,7 @@ describe("DataCompilerPage", () => {
 
         render(<DataCompilerPage/>);
 
-        vi.mocked(fetch).mockRejectedValueOnce(new Error("Network error"));
+        vi.mocked(dataCompilerApi.compileJson).mockReturnValue(createErrorResponse())
 
         const file = createMockFile(mockTableSchema);
 
@@ -205,9 +217,11 @@ describe("DataCompilerPage", () => {
 
         render(<DataCompilerPage/>);
 
-        vi.mocked(fetch).mockResolvedValueOnce(
-            createMockResponse(200, "success", "Compiled successfully"),
-        );
+        vi.mocked(dataCompilerApi.compileJson).mockReturnValue(createMockCompileJsonResponse(
+            200,
+            "success",
+            "Compiled successfully"
+        ))
 
         const invalidFile = new File(["{ invalid json syntax"], "invalid.json", {
             type: "application/json",
