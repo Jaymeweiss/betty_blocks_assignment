@@ -18,6 +18,7 @@ defmodule DataApiWeb.Router do
     pipe_through :api
 
     get "/db_tables", DatabasesController, :db_tables
+    post "/create_table", DatabasesController, :create_table
   end
 
   scope "/", DataApiWeb do
