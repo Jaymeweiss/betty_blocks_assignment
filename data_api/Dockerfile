@@ -34,6 +34,13 @@ RUN if [ "${MIX_ENV}" != "dev" ]; then \
     ln -s /public /app/priv/static \
     && mix phx.digest && mix release && rm -rf /app/priv/static; fi
 
+COPY --chown=elixir:elixir entrypoint.sh /entrypoint.sh
+USER root
+RUN chmod +x /entrypoint.sh
+USER elixir
+
 EXPOSE 8000
+
+ENTRYPOINT ["/entrypoint.sh"]
 
 CMD ["mix", "phx.server"]
