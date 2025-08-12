@@ -32,7 +32,7 @@ defmodule DataCompilerWeb.CompilerControllerTest do
       json_data = %{
         "name" => "test_table",
         "columns" => [
-          %{"name" => "id", "type" => "integer", "size" => nil, "default" => nil, "nullable" => false},
+          %{"name" => "age", "type" => "integer", "size" => nil, "default" => nil, "nullable" => false},
           %{"name" => "email", "type" => "string", "size" => 255, "default" => nil, "nullable" => false},
           %{"name" => "is_active", "type" => "bool", "size" => nil, "default" => true, "nullable" => true}
         ]
@@ -59,8 +59,8 @@ defmodule DataCompilerWeb.CompilerControllerTest do
       
       assert parsed_data.name == "test_table"
 
-      [id_column, email_column, is_active_column] = parsed_data.columns
-      assert id_column.type == "integer"
+      [age_column, email_column, is_active_column] = parsed_data.columns
+      assert age_column.type == "integer"
       assert email_column.type == "string"
       assert is_active_column.type == "boolean"
     end
