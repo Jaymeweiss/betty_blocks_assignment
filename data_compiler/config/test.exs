@@ -2,8 +2,10 @@ import Config
 
 # Redis
 config :data_compiler, :redis,
-  host: "redis",
-  port: 6379
+  host: System.get_env("REDIS_HOST", "redis"),
+  port: String.to_integer(System.get_env("REDIS_PORT", "6379")),
+  timeout: 5000,
+  sync_connect: true
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
