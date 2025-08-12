@@ -17,7 +17,7 @@ class DataApiService {
     }
 
     async getDatabaseTableList(): Promise<Response | Error> {
-        return await fetch(`${this.baseUrl}/databases`, {
+        return await fetch(`${this.baseUrl}/db_tables`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

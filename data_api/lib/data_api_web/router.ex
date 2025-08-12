@@ -15,6 +15,12 @@ defmodule DataApiWeb.Router do
   end
 
   scope "/", DataApiWeb do
+    pipe_through :api
+
+    get "/db_tables", DatabasesController, :db_tables
+  end
+
+  scope "/", DataApiWeb do
     pipe_through :browser
 
     get "/", PageController, :home
