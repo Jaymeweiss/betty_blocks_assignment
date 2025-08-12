@@ -12,8 +12,11 @@ config :data_api, DataApi.Repo,
 
 # Redis
 config :data_api, :redis,
-  host: "redis",
-  port: 6379
+  host: System.get_env("REDIS_HOST", "redis"),
+  port: String.to_integer(System.get_env("REDIS_PORT", "6379")),
+  timeout: 5000,
+  sync_connect: true
+
 
 # For development, we disable any cache and enable
 # debugging and code reloading.
