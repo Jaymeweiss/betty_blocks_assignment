@@ -1,7 +1,7 @@
 {
-  "name": "test_table",
+  "name": "a_new_example_table",
   "columns": [
-    {"name": "id", "type": "int"},
-    {"name": "name", "type": "string"}
+    {"name": "age", "type": "int", "size": null, "default": null, "nullable": false},
+    {"name": "email", "type": "string", "size": 255, "default": null, "nullable": false}
   ]
 }
