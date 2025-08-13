@@ -63,7 +63,9 @@ defmodule DataApiWeb.DatabasesControllerTest do
              } = json_response(conn, 201)
       
       assert table_exists?("users")
-      
+
+      assert db_table_entry_exists?("users")
+
       drop_table_if_exists("users")
       Redix.command!(redis_conn, ["DEL", config_key])
       Redix.stop(redis_conn)
@@ -155,6 +157,8 @@ defmodule DataApiWeb.DatabasesControllerTest do
              } = json_response(conn, 201)
       
       assert table_exists?("complex_table")
+      
+      assert db_table_entry_exists?("complex_table")
 
       drop_table_if_exists("complex_table")
       Redix.command!(redis_conn, ["DEL", "complex_table_key"])
@@ -176,6 +180,13 @@ defmodule DataApiWeb.DatabasesControllerTest do
       _ -> false
     end
   end
+  
+defp db_table_entry_exists?(table_name) do
+  case DataApi.Repo.get_by(DataApi.DbTable, name: table_name) do
+    nil -> false
+    _ -> true
+  end
+end
 
   defp drop_table_if_exists(table_name) do
     query = "DROP TABLE IF EXISTS #{table_name};"

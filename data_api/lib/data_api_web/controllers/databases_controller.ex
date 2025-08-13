@@ -24,12 +24,20 @@ defmodule DataApiWeb.DatabasesController do
               message: "Table '#{config.name}' created successfully"
             })
 
-          {:error, reason} ->
+          {:error, {:table_creation, reason}} ->
             conn
             |> put_status(500)
             |> json(%{
               status: "error",
               message: "Failed to create table: #{inspect(reason)}"
+            })
+
+          {:error, reason} ->
+            conn
+            |> put_status(500)
+            |> json(%{
+              status: "error",
+              message: "Failed for reason: #{inspect(reason)}"
             })
         end
 
@@ -90,9 +98,19 @@ defmodule DataApiWeb.DatabasesController do
     sql = build_create_table_sql(config)
 
     case Ecto.Adapters.SQL.query(DataApi.Repo, sql) do
-      {:ok, _result} -> :ok
-      {:error, error} -> {:error, error}
+      {:ok, _result} -> 
+        case insert_db_table_record(config.name) do
+          {:ok, _db_table} -> :ok
+          {:error, _changeset} -> {:error, "Failed to insert into db_tables"}
+        end
+      {:error, error} -> {:error, {:table_creation, error}}
     end
+  end
+
+  defp insert_db_table_record(table_name) do
+    %DbTable{}
+    |> DbTable.changeset(%{name: table_name})
+    |> DataApi.Repo.insert()
   end
 
   defp build_create_table_sql(config) do
